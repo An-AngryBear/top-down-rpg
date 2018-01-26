@@ -1,32 +1,29 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public class Player : Entity {
+public class Player : MonoBehaviour {
 
-	void Start () {
-		
+    Animator anim;
+    public float moveSpeed;
+
+    void Start () {
+        anim = GetComponent<Animator>();
 	}
 	
 	void Update () {
-  
-        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
-        {
-            GetComponent<Rigidbody2D>().transform.position += Vector3.up * speed * Time.deltaTime;
-        }
-        if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
-        {
-            GetComponent<Rigidbody2D>().transform.position += Vector3.down * speed * Time.deltaTime;
 
-        }
-        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
-        {
-            GetComponent<Rigidbody2D>().transform.position += Vector3.left * speed * Time.deltaTime;
+        float input_x = Input.GetAxisRaw("Horizontal");
+        float input_y = Input.GetAxisRaw("Vertical");
 
-        }
-        if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
-        {
-            GetComponent<Rigidbody2D>().transform.position += Vector3.right * speed * Time.deltaTime;
+        bool isWalking = (Mathf.Abs(input_x) + Mathf.Abs(input_y)) > 0;
 
+        anim.SetBool("isWalking", isWalking);
+        if(isWalking)
+        {
+            anim.SetFloat("x", input_x);
+            anim.SetFloat("y", input_y);
+
+            transform.position += new Vector3(input_x, input_y, 0).normalized * Time.deltaTime * moveSpeed;
         }
     }
 }
